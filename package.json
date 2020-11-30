@@ -1,0 +1,10 @@
+{
+  "name": "netsuite-api-2-ts",
+  "version": "1.0.0",
+  "description": "Types file for NetSuite API 2.0",
+  "keywords": ["typescript", "netsuite", "types"],
+  "author": "jmbeach",
+  "license": "MIT",
+  "types": "./netsuite-api-2.d.ts",
+  "files": ["*.ts"]
+}

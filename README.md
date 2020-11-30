@@ -34,3 +34,9 @@ Add a tsconfig.json file to your project similar to the following:
 ```
 
 The above code assumes that the `.d.ts` file is located in the folder `./@types`.
+
+Using this in combination with the [NetSuite Upload](https://marketplace.visualstudio.com/items?itemName=nsupload-org.netsuite-upload) extension can completely replace the need for [NetSuite's SuiteCloud IDE](https://docs.oracle.com/cloud/latest/netsuitecs_gs/NSIDE/NSIDE.pdf).
+
+## Contributing
+
+The declaration file is edited manually. Not every entity in the API has been added to the declaration file yet. If there is something you would like to add, use NetSuite's [API Reference](https://docs.oracle.com/cloud/latest/netsuitecs_gs/NSAPI/NSAPI.pdf) to figure out the syntax and add it directly to netsuite-api-2.d.ts and create a pull request.
