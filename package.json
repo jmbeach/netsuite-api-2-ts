@@ -6,5 +6,9 @@
   "author": "jmbeach",
   "license": "MIT",
   "types": "./netsuite-api-2.d.ts",
-  "files": ["*.ts"]
+  "files": ["*.ts"],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jmbeach/netsuite-api-2-ts"
+  }
 }
