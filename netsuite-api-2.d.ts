@@ -990,6 +990,14 @@ declare module N.http {
     headers: object;
   }
 
+  export const RedirectType: {
+    MEDIA_ITEM: string;
+    RECORD: string;
+    RESTLET: string;
+    SUITELET: string;
+    TASK_LINK: string;
+  }
+
   export interface ServerRequest {
     /** @description Returns the number of lines in a sublist */
     getLineCount(options: any): number;
@@ -1012,6 +1020,19 @@ declare module N.http {
 
   export interface WritePageOptions {
     pageObject: N.ui.serverWidget.Form
+  }
+
+  export interface SendRedirectOptions {
+    /** @description The type of resource redirected to (use http.RedirectType) */
+    type: string;
+    /** @description The primary ID for this resource. The value you use varies depending on the value of options.type, as follows: MEDIA_ITEM — Use the internal ID of a file stored in the NetSuite File Cabinet. RECORD — Use the record.Type enum to identify the appropriate record type. RESTLET — Use the script ID from the script record of the appropriate RESTlet. SUITELET — Use the script ID from the script record of the appropriate Suitelet. TASK_LINK — Use the appropriate Task ID. Supported IDs are listed in Task IDs. */
+    identifier: string;
+    /** @description the secondary id for this resource */
+    id?: string;
+    /** @description for RECORD calls, this determines whether to return a URL for the record in edit mode or view mode */
+    editMode?: boolean;
+    /** @description additional URL parameters as name/value pairs */
+    parameters?: any;
   }
 
   export interface ServerResponse {
@@ -1041,18 +1062,13 @@ declare module N.http {
     /**
      * Sets the redirect URL by resolving to a NetSuite resource. Note that all parameters must be prefixed with custparam.
      * @param {Object} options
-     * @param {string} options.type the base type for this resource - one of RECORD, TASKLINK or SUITELET
-     * @param {string} options.identifier the primary id for this resource
-     * @param {string} options.id (optional) the secondary id for this resource
-     * @param {boolean} options.editMode (optional) for RECORD calls, this determines whether to return a URL for the record in edit mode or view mode
-     * @param {Object} options.parameters (optional) additional URL parameters as name/value pairs
      * @throws {error.SuiteScriptError} SSS_MISSING_REQD_ARGUMENT if a required parameter is missing
      * @throws {error.SuiteScriptError} SSS_INVALID_URL_CATEGORY if type is none of RECORD, TASKLINK or SUITELET
      * @throws {error.SuiteScriptError} SSS_INVALID_TASK_ID if type is TASKLINK and an invalid task identifier is passed in the options.identifier parameter
      * @throws {error.SuiteScriptError} SSS_INVALID_RECORD_TYPE if type is RECORD and an invalid record type is passed in the options.identifier parameter
      * @throws {error.SuiteScriptError} SSS_INVALID_SCRIPT_ID_1 if type is SUITELET and an invalid script ID and deployment ID are passed in the options.identifier and options.id parameters
      */
-    sendRedirect(options);
+    sendRedirect(options: SendRedirectOptions);
 
     /**
      * Write information (text/xml/html) to the response.
@@ -1411,16 +1427,11 @@ declare module N.record {
 
     /**
      * set the value of a sublist field (available for deferred dynamic only)
-     * @param {Object} options
-     * @param {string} options.sublistId
-     * @param {string} options.fieldId
-     * @param {number} options.line
-     * @param {(number|Date|string|Array|boolean)} options.value
      * @return {Record} same record, for chaining
      * @throws {SuiteScriptError} SSS_MISSING_REQD_ARGUMENT if sublistId, fieldId, or line is missing
      * @throws {SuiteScriptError} SSS_INVALID_SUBLIST_OPERATION if invalid sublist id, field id, or line number
      */
-    setSublistValue(options);
+    setSublistValue(options: SetSublistValueOptions): Record;
 
     /**
      * return value of a sublist field in text representation
@@ -3053,7 +3064,7 @@ declare module N.ui.serverWidget {
     id: string;
     /** @description UI label for the field */
     label: string;
-    /** @description Type of the field */
+    /** @description Type of the field (use ui.serverWidget.FieldType) */
     type: string;
     /** @description The internalId or scriptId of the source list for this field if it is a select (List/Record) or multi-select field */
     source?: string;
@@ -3352,7 +3363,7 @@ declare module N.ui.serverWidget {
      * @param {string} [options.tab] The id of the tab where to add the sublist to
      * @return {Sublist}
      */
-    addSublist(options);
+    addSublist(options): Sublist;
 
     /**
      * Add a Subtab to the form
@@ -3536,22 +3547,13 @@ declare module N.ui.serverWidget {
 
     /**
      * Returns string value of a sublist field.
-     *
-     * @param {Object} options
-     * @param {string} options.id Id of the field
-     * @param {number} options.line Line number
      */
-    getSublistValue(options): string;
+    getSublistValue(options: GetSublistValueOptions): string;
 
     /**
      * Set the value of a field on the list
-     *
-     * @param {Object} options
-     * @param {string} options.id   id of the field to set
-     * @param {number} options.line line number
-     * @param {string} options.value value to set on the field
      */
-    setSublistValue(options);
+    setSublistValue(options: SetSublistValueOptions);
 
     /**
      * Adds refresh all buttons to the sublist
@@ -3580,7 +3582,25 @@ declare module N.ui.serverWidget {
      * @param {Object} options
      * @param {string} options.id    id of the field to get
      */
-    getField(options: {id: string}): Field;
+    getField(options: { id: string }): Field;
+  }
+
+  export const SublistType: {
+    INLINEEDITOR: string;
+    EDITOR: string;
+    LIST: string;
+    STATICLIST: string;
+  }
+
+  export interface GetSublistValueOptions {
+    id: string;
+    line: number;
+  }
+
+  export interface SetSublistValueOptions {
+    id: string;
+    line: number;
+    value: string;
   }
 
   export const SublistDisplayType: {
@@ -3594,17 +3614,13 @@ declare module N.ui.serverWidget {
 }
 
 declare module N.url {
-  /**
- * @param {Object} options
- * @param {string} options.recordType
- * @param {string} options.recordId
- * @param {boolean} options.isEditMode
- * @param {Object} options.params Per url.format({query
- *
- * @return {String} url
- *
- */
-  export function resolveRecord(options);
+  export function resolveRecord(options: ResolveRecordOptions): string;
+  export interface ResolveRecordOptions {
+    recordType: string;
+    recordId: string;
+    isEditMode: boolean;
+    params?: any;
+  }
 
   /**
    *
