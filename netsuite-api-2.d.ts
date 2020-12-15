@@ -362,7 +362,7 @@ declare module N.currentRecord {
      * @throws {SuiteScriptError} SSS_INVALID_SUBLIST_OPERATION if invalid sublist id or field id
      * @restriction only available in dynamic record
      */
-    getCurrentSublistValue(options: GetCurrentSublistValueOptions): number | Date | string | Array<any> | boolean;
+    getCurrentSublistValue(options: GetCurrentSublistValueOptions): any;
 
 
     /**
