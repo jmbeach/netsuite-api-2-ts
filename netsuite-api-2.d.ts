@@ -1094,7 +1094,7 @@ declare module N.http {
      * @param {serverWidget.Assistant|serverWidget.Form|serverWidget.List} options.pageObject standalone page object: assistant, form or list
      * @throws {error.SuiteScriptError} SSS_MISSING_REQD_ARGUMENT if a required parameter is missing
      */
-    writePage(options: WritePageOptions);
+    writePage(options: WritePageOptions|N.ui.serverWidget.Form);
 
     /**
      * Write a file to the response.
